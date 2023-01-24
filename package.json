@@ -1,0 +1,10 @@
+{
+  "name": "reservease.consumer",
+  "version": "1.0.0",
+  "description": "This package allows you to create an amqplib consumer",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Japhet Kuntu Blankson",
+  "license": "MIT"
+}
