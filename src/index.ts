@@ -166,7 +166,7 @@ export class RabitQueue {
         try {
             await channel.assertExchange(this._exchangeName, "direct", { durable: true });
   const q = await channel.assertQueue("", { exclusive: true });
-  console.log(` Waiting for messages in queue: ${q.queue}`);
+//   console.log(` Waiting for messages in queue: ${q.queue}`);
 
   channel.bindQueue(q.queue, this._exchangeName,  this._bindingKey);
 
@@ -174,10 +174,10 @@ export class RabitQueue {
     q.queue,
     (msg:any) => {
       if (msg.content) {
-        console.log("the message is:", msg.content.toString());
+        // console.log("the message is:", msg.content.toString());
         service.SubscribeEvents(msg.content.toString());
       }
-      console.log("[X] received");
+    //   console.log("[X] received");
     },
     {
       noAck: true,
@@ -189,7 +189,7 @@ export class RabitQueue {
       }
       public async PublishMessage(channel:IChannel, bindingKey:string, payload:string) {
         channel.publish(this._exchangeName, bindingKey, Buffer.from(payload));
-        console.log("Sent: ", payload);
+        // console.log("Sent: ", payload);
        
       };
 
