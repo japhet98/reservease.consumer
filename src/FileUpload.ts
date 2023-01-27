@@ -16,7 +16,7 @@ interface INewFilePayload{
     fileSize:number;
 }
 
-export default class FilUploadService{
+export  class FilUploadService{
  private   projectId: string;
  private   storageBucket:string;
  private   privateKey: string;

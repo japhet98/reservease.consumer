@@ -4,6 +4,8 @@ import { JoiValidation } from "./JoiValidation";
 import { RabitQueue } from "./RabitQueue";
 import { SlackMessengerService } from "./SlackMessenger";
 import { SlackNotification } from "./SlackNotification";
+import { EmailService } from './EmailService';
+import {FilUploadService} from './FileUpload';
 
 export {
   RabitQueue,
@@ -11,5 +13,7 @@ export {
   JoiValidation,
   SlackMessengerService,
   SlackNotification,
-  ApiResponse
+  ApiResponse,
+  EmailService,
+  FilUploadService
 }
