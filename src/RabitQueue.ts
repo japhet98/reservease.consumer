@@ -57,17 +57,14 @@ export class RabitQueue {
       const q = await channel.assertQueue(queue, {
         durable: false,
       });
-      //   console.log(` Waiting for messages in queue: ${q.queue}`);
 
       channel.consume(
         q.queue,
         (msg: any) => {
           if (msg.content) {
-            // console.log("the message is:", msg.content.toString());
             service.SubscribeEvents(msg.content.toString());
           }
 
-          //   console.log("[X] received");
         },
         {
           noAck: true,
@@ -75,7 +72,6 @@ export class RabitQueue {
       );
     } catch (err: any) {
       throw err;
-      //return new InternalApiResponse<string>(false,undefined,` [x] Failed to receive message from queue ${queue}`,err?.message);
     }
   }
 
@@ -83,7 +79,6 @@ export class RabitQueue {
     try {
       await channel.assertExchange(exchangeName, 'direct', { durable: true });
       const q = await channel.assertQueue('', { exclusive: true });
-      //   console.log(` Waiting for messages in queue: ${q.queue}`);
 
       channel.bindQueue(q.queue, exchangeName, bindingKey);
 
@@ -91,10 +86,8 @@ export class RabitQueue {
         q.queue,
         (msg: any) => {
           if (msg.content) {
-            // console.log("the message is:", msg.content.toString());
             service.SubscribeEvents(msg.content.toString());
           }
-            // console.log("[X] received");
         },
         {
           noAck: true,
