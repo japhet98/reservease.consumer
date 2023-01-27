@@ -41,7 +41,7 @@ export default class FilUploadService{
 
    
     public getPublicUrl = (bucketName:string,fileName:string): string=>`https://storage.googleapis.com/${bucketName}/${fileName}`;
-    public  UploadToGCS = (req:any,res:Response,next: any)=>{
+    public  UploadToGCS = (req:any,res:any,next: any)=>{
 
         try{
          if(!req.files){
