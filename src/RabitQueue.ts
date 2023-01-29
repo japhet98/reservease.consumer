@@ -17,7 +17,7 @@ export class RabitQueue {
       await channel.assertQueue(queue, { durable: false });
       return new InternalApiResponse<any>(true, channel, 'Successfully created channel');
     } catch (err: any) {
-      return new InternalApiResponse<any>(false, undefined, 'Failed to create channel');
+      return new InternalApiResponse<any>(false, undefined, err?.message);
     }
   }
 
@@ -25,11 +25,12 @@ export class RabitQueue {
     try {
       const connection = await amqplib.connect(this._connectionUrl);
       const channel = await connection.createChannel();
+      
       await channel.assertExchange(exchangeName, 'direct', { durable: true });
 
       return new InternalApiResponse<any>(true, channel, 'Successfully created channel');
     } catch (err: any) {
-      return new InternalApiResponse<any>(false, undefined, 'Failed to create channel');
+      return new InternalApiResponse<any>(false, undefined, err?.message);
     }
   }
 
@@ -80,7 +81,7 @@ export class RabitQueue {
       await channel.assertExchange(exchangeName, 'direct', { durable: true });
       const q = await channel.assertQueue('', { exclusive: true });
 
-      channel.bindQueue(q.queue, exchangeName, bindingKey);
+      channel.bindQueue(q.queue, exchangeName);
 
       channel.consume(
         q.queue,
@@ -97,6 +98,7 @@ export class RabitQueue {
       throw error;
     }
   }
+
   public async PublishMessage(
     channel: any,
     exchangeName: string,
