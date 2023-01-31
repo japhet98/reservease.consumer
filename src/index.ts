@@ -6,6 +6,7 @@ import { SlackMessengerService } from "./SlackMessenger";
 import { SlackNotification } from "./SlackNotification";
 import { EmailService } from './EmailService';
 import {FilUploadService} from './FileUpload';
+import { HubtelPayment } from './HubtelRequestPayment';
 
 export {
   RabitQueue,
@@ -15,5 +16,6 @@ export {
   SlackNotification,
   ApiResponse,
   EmailService,
-  FilUploadService
+  FilUploadService,
+  HubtelPayment
 }
