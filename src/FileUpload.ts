@@ -6,6 +6,8 @@ interface IFileUPload{
     storageBucket:string;
     privateKey:string;
     storageFolder:string;
+    fileLimit?:number;
+
 }
 
 interface INewFilePayload{
@@ -23,12 +25,13 @@ export  class FilUploadService{
  private   gcStorage: Storage;
  private    storageFolder: string;
  private   hostingProvider = "gcp-storage";
+ private   fileLimit?:number=10;
     constructor(params:IFileUPload){
         this.projectId = params.projectId;
         this.storageBucket = params.storageBucket;
         this.privateKey = params.privateKey;
         this.storageFolder = params.storageFolder;
-
+        this.fileLimit = params.fileLimit;
          this.gcStorage = new Storage(
             {
                 projectId:this.projectId,
@@ -116,7 +119,7 @@ export  class FilUploadService{
      public uploadMiddleware = multer({
         storage: multer.memoryStorage(),
         limits:{
-            fileSize: 10 * 1024 * 1024
+            fileSize: (this.fileLimit?this.fileLimit:10) * 1024 * 1024
         }
         })
 
