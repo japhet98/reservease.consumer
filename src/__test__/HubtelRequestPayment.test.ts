@@ -19,7 +19,7 @@ const apiRes:any={
             amount:1,
             title :"Testing Payment Service",
             description:"Testing Payment Service",
-            callbackUrl: "https://roomallocationserver-pdwatiowia-uc.a.run.app/api/v3/request-payment/callback",
+            callbackUrl: "https://webhook.site/1f86723f-879c-4b4c-bbcb-f299497ec023",
             cancellationUrl:"https://www.reservease.com",
             returnUrl:"https://www.reservease.com",
             logo:"https://storage.googleapis.com/us.artifacts.reservease-370818.appspot.com/reservease/assets/reservease-logo.png"

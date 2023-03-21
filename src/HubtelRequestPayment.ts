@@ -1,4 +1,4 @@
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import { InternalApiResponse } from "./InternalApiResponse";
 
@@ -27,6 +27,7 @@ interface IRequestPayload{
     cancellationUrl:string;
     returnUrl:string;
     logo:string;
+    clientReference?:string;
 }
 
 export class HubtelPayment{
@@ -56,9 +57,9 @@ export class HubtelPayment{
     
 
 
-    public async GetPaymentPayload(params:IRequestPayload){
+    public async GetPaymentPayload(params:IRequestPayload):Promise<InternalApiResponse<IResponsePayload>>{
         try{
-            const clientReference = uuid(); 
+            const clientReference = params?.clientReference?? uuidv4(); 
             const Payload ={
                 clientReference,
                 amount: params?.amount,
@@ -83,13 +84,13 @@ export class HubtelPayment{
                 responseData:response.data
             }
             
-            return new InternalApiResponse<any>(true,resp,"Payment Request Successfull")
+            return new InternalApiResponse<IResponsePayload>(true,resp,"Payment Request Failed")
           
             
         }
-        catch(err){
+        catch(error){
             
-            return new InternalApiResponse<any>(false,null,"Payment Request Failed")
+            return new InternalApiResponse<IResponsePayload>(false,undefined,JSON.stringify(error))
         }
       
 

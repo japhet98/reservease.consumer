@@ -127,7 +127,7 @@ export class EmailService{
             },"Successfuly sent email")
            
         } catch (error: any) {
-            return new InternalApiResponse<IEmailRes>(false, undefined,"Faled to send email")
+            return new InternalApiResponse<IEmailRes>(false, undefined,JSON.stringify(error))
         }
 
 
@@ -156,7 +156,7 @@ export class EmailService{
             },"Successfuly sent email")
            
         } catch (error: any) {
-            return new InternalApiResponse<IEmailRes>(false, undefined,"Faled to send email")
+            return new InternalApiResponse<IEmailRes>(false, undefined,JSON.stringify(error))
         }
 
 
