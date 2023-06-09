@@ -25,7 +25,7 @@ export class RabitQueue {
     try {
       const connection = await amqplib.connect(this._connectionUrl);
       const channel = await connection.createChannel();
-      
+
       await channel.assertExchange(exchangeName, 'direct', { durable: true });
 
       return new InternalApiResponse<any>(true, channel, 'Successfully created channel');
@@ -65,7 +65,6 @@ export class RabitQueue {
           if (msg.content) {
             service.SubscribeEvents(msg.content.toString());
           }
-
         },
         {
           noAck: true,

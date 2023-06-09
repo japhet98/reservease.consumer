@@ -1,6 +1,6 @@
 {
   "name": "reservease.consumer",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "This package allows you to create an amqplib consumer and producer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
