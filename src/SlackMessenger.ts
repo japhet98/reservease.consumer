@@ -10,7 +10,7 @@ export class SlackMessengerService {
     try {
       return await this._client.chat.postMessage(
         Message({
-          channel: channel,
+           channel,
           text: `Error- [${topic}]`,
         })
           .blocks(Section().text(Md.codeBlock(` ${JSON.stringify(require('@stdlib/error-to-json')(error), null, 4)}`)))
@@ -25,7 +25,7 @@ export class SlackMessengerService {
     try {
       return this._client.chat.postMessage(
         Message({
-          channel: channel,
+           channel,
           text: `${title}`,
         })
           .blocks(

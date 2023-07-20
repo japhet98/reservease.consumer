@@ -18,13 +18,15 @@ interface INewFilePayload {
 }
 
 export class FilUploadService {
-  private projectId: string;
-  private storageBucket: string;
-  private privateKey: string;
-  private gcStorage: Storage;
-  private storageFolder: string;
-  private hostingProvider = 'gcp-storage';
-  private fileLimit?: number = 10;
+  protected projectId: string;
+  protected storageBucket: string;
+  protected privateKey: string;
+  protected gcStorage: Storage;
+  protected storageFolder: string;
+  protected hostingProvider = 'gcp-storage';
+  protected fileLimit?: number = 10;
+  protected isRequired:boolean = false;
+
   constructor(params: IFileUPload) {
     this.projectId = params.projectId;
     this.storageBucket = params.storageBucket;
@@ -42,12 +44,13 @@ export class FilUploadService {
   public UploadToGCS = (req: any, res: any, next: any) => {
     try {
       if (!req.files) {
-        return next(new Error('Files are required for uplaod'));
+        return next();
       }
 
       const bucketName = this.storageBucket;
       const gcsBucket = this.gcStorage.bucket(bucketName);
       let promises: any = [];
+      
       req.files.forEach((_file: any, index: any) => {
         const fileName = _file.originalname.toLowerCase().split(' ').join('-');
 
