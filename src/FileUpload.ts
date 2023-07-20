@@ -25,7 +25,7 @@ export class FilUploadService {
   protected storageFolder: string;
   protected hostingProvider = 'gcp-storage';
   protected fileLimit?: number = 10;
-  protected isRequired:boolean = false;
+  protected isRequired: boolean = false;
 
   constructor(params: IFileUPload) {
     this.projectId = params.projectId;
@@ -50,7 +50,7 @@ export class FilUploadService {
       const bucketName = this.storageBucket;
       const gcsBucket = this.gcStorage.bucket(bucketName);
       let promises: any = [];
-      
+
       req.files.forEach((_file: any, index: any) => {
         const fileName = _file.originalname.toLowerCase().split(' ').join('-');
 

@@ -12,13 +12,11 @@ export class SlackNotification extends SlackMessengerService {
   public LogError(err: any, req: any, res: any, next: any, code = null) {
     const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     this.sendMessage(`:x: Error => ${fullUrl} => on: ${new Date()}`, err.message, this.channel);
-    return res
-      .status(400)
-      .json({
-        message: err?.details ? `Validation error: ${err.details.map((x: any) => x.message).join(', ')} ` : err.message,
-        data: null,
-        code: code ? code : 400,
-      });
+    return res.status(400).json({
+      message: err?.details ? `Validation error: ${err.details.map((x: any) => x.message).join(', ')} ` : err.message,
+      data: null,
+      code: code ? code : 400,
+    });
   }
 
   public LogSuccess(message: string, code: number, data?: any) {
