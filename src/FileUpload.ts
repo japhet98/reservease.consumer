@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
-import * as multer from 'multer';
-
+import multer from 'multer';
+import stream from 'stream';
 interface IFileUPload {
   projectId: string;
   storageBucket: string;
@@ -18,14 +18,17 @@ interface INewFilePayload {
 }
 
 export class FilUploadService {
-  protected projectId: string;
-  protected storageBucket: string;
-  protected privateKey: string;
-  protected gcStorage: Storage;
-  protected storageFolder: string;
-  protected hostingProvider = 'gcp-storage';
-  protected fileLimit?: number = 10;
-  protected isRequired: boolean = false;
+  public projectId: string;
+  public storageBucket: string;
+  public privateKey: string;
+  public gcStorage: Storage;
+  public storageFolder: string;
+  public hostingProvider = 'gcp-storage';
+  public fileLimit?: number = 10;
+  public isRequired: boolean = false;
+  public _storage = Storage;
+  public _multer = multer;
+  public _stream = stream;
 
   constructor(params: IFileUPload) {
     this.projectId = params.projectId;
@@ -49,7 +52,7 @@ export class FilUploadService {
 
       const bucketName = this.storageBucket;
       const gcsBucket = this.gcStorage.bucket(bucketName);
-      let promises: any = [];
+      const promises: any = [];
 
       req.files.forEach((_file: any, index: any) => {
         const fileName = _file.originalname.toLowerCase().split(' ').join('-');
@@ -59,16 +62,16 @@ export class FilUploadService {
         const size = _file.size;
 
         const promise = new Promise((resolve, reject) => {
-          const stream = file.createWriteStream({
+          const Stream = file.createWriteStream({
             metadata: {
               contentType: _file.mimetype,
             },
           });
-          stream.on('error', (err) => {
+          Stream.on('error', (err) => {
             req.files[index].cloudStorageError = err;
             reject(err);
           });
-          stream.on('finish', async () => {
+          Stream.on('finish', async () => {
             try {
               req.files[index].cloudStorageObject = gcsFileName;
               await file.makePublic();
@@ -86,14 +89,13 @@ export class FilUploadService {
               reject(error);
             }
           });
-          stream.end(_file.buffer);
+          Stream.end(_file.buffer);
         });
         promises.push(promise);
       });
 
       Promise.all(promises)
         .then((_) => {
-          promises = [];
           next();
         })
         .catch(next);
@@ -108,4 +110,68 @@ export class FilUploadService {
       fileSize: (this.fileLimit ? this.fileLimit : 10) * 1024 * 1024,
     },
   });
+
+  public UploadBufferToGCSNew = async (data: any) =>
+    new Promise((res, rej) => {
+      try {
+        if (!data) {
+          throw new Error('No data found');
+        }
+        const bucketName = this.storageBucket;
+        const gcsBucket = this.gcStorage.bucket(bucketName);
+
+        const promises: any = [];
+
+        data.forEach((_file: any, index: any) => {
+          const fileName = _file.FileName.toLowerCase().split(' ').join('-');
+
+          const gcsFileName = `documents/${Date.now()}-${fileName}`;
+          const file = gcsBucket.file(gcsFileName);
+          const promise = new Promise((resolve, reject) => {
+            const bufferStream = new stream.PassThrough();
+            bufferStream.end(Buffer.from(_file?.Base64Image, 'base64'));
+
+            bufferStream
+              .pipe(
+                file.createWriteStream({
+                  metadata: {
+                    contentType: _file.FileType,
+                  },
+                }),
+              )
+
+              .on('error', (err: any) => {
+                data[index].cloudStorageError = err;
+                reject(err);
+              })
+              .on('finish', async () => {
+                try {
+                  data[index].cloudStorageObject = gcsFileName;
+                  await file.makePublic();
+                  const newFile: INewFilePayload = {
+                    fileName: _file?.cloudStorageObject?.split(`${this.storageFolder}/`)?.[1],
+                    fileUrl: this.getPublicUrl(bucketName, _file?.cloudStorageObject),
+                    hostingProvider: this.hostingProvider,
+                    fileType: '',
+                    fileSize: 0,
+                  };
+                  data[index] = newFile;
+                  resolve(data[index]);
+                } catch (error: any) {
+                  reject(error);
+                }
+              });
+          });
+          promises.push(promise);
+        });
+
+        Promise.all(promises)
+          .then((_) => {
+            res(data);
+          })
+          .catch();
+      } catch (err) {
+        throw err;
+      }
+    });
 }

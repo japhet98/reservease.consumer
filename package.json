@@ -1,6 +1,6 @@
 {
   "name": "reservease.consumer",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "This package allows you to create an amqplib consumer and producer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -45,6 +45,7 @@
     "nodemailer": "^6.9.0",
     "nodemailer-express-handlebars": "^6.0.0",
     "slack-block-builder": "^2.7.2",
+    "stream": "^0.0.2",
     "uuidv4": "^6.2.13"
   }
 }

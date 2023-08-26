@@ -1,6 +1,6 @@
-import * as nodemailer from 'nodemailer';
-import * as Handlebars from 'handlebars';
-import * as hbs from 'nodemailer-express-handlebars';
+import nodemailer from 'nodemailer';
+import Handlebars from 'handlebars';
+import hbs from 'nodemailer-express-handlebars';
 import { InternalApiResponse } from './InternalApiResponse';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
