@@ -7,6 +7,7 @@ interface IFileUPload {
   privateKey: string;
   storageFolder: string;
   fileLimit?: number;
+  publicUrl?: string;
 }
 
 interface INewFilePayload {
@@ -29,6 +30,7 @@ export class FilUploadService {
   public _storage = Storage;
   public _multer = multer;
   public _stream = stream;
+  public publicUrl?: string;
 
   constructor(params: IFileUPload) {
     this.projectId = params.projectId;
@@ -36,14 +38,17 @@ export class FilUploadService {
     this.privateKey = params.privateKey;
     this.storageFolder = params.storageFolder;
     this.fileLimit = params.fileLimit;
+    this.publicUrl = params.publicUrl;
     this.gcStorage = new Storage({
       projectId: this.projectId,
       credentials: JSON.parse(this.privateKey ?? ''),
     });
   }
 
-  public getPublicUrl = (bucketName: string, fileName: string): string =>
-    `https://storage.googleapis.com/${bucketName}/${fileName}`;
+  public getPublicUrl = (bucketName: string, fileName: string, hostUrl: string = ''): string =>
+    this.publicUrl === ''
+      ? `https://storage.googleapis.com/${bucketName}/${fileName}`
+      : `${hostUrl}${this.publicUrl}/${fileName}`;
   public UploadToGCS = (req: any, res: any, next: any) => {
     try {
       if (!req.files) {
@@ -53,7 +58,7 @@ export class FilUploadService {
       const bucketName = this.storageBucket;
       const gcsBucket = this.gcStorage.bucket(bucketName);
       const promises: any = [];
-
+      const hostUrl = req.protocol + '://' + req.get('host');
       req.files.forEach((_file: any, index: any) => {
         const fileName = _file.originalname.toLowerCase().split(' ').join('-');
 
@@ -78,7 +83,7 @@ export class FilUploadService {
 
               const newFile: INewFilePayload = {
                 fileName: _file?.cloudStorageObject?.split(`${this.storageFolder}/`)?.[1],
-                fileUrl: this.getPublicUrl(bucketName, _file?.cloudStorageObject),
+                fileUrl: this.getPublicUrl(bucketName, _file?.cloudStorageObject, hostUrl),
                 hostingProvider: this.hostingProvider,
                 fileType: _file.mimetype,
                 fileSize: size,
