@@ -58,7 +58,7 @@ export class FilUploadService {
       const bucketName = this.storageBucket;
       const gcsBucket = this.gcStorage.bucket(bucketName);
       const promises: any = [];
-      const hostUrl = req.protocol + '://' + req.get('host');
+      const hostUrl = 'https://' + req.get('host');
       req.files.forEach((_file: any, index: any) => {
         const fileName = _file.originalname.toLowerCase().split(' ').join('-');
 

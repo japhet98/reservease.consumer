@@ -37,6 +37,7 @@ interface IRequestPayloadV2 {
   cancellationUrl: string;
   returnUrl: string;
   clientReference?: string;
+  customerMobileNumber?: string;
 }
 export class HubtelPayment {
   private readonly _authCredendtial: IAuthCredentail;
@@ -105,6 +106,7 @@ export class HubtelPayment {
         cancellationUrl: params?.cancellationUrl,
         returnUrl: params?.returnUrl,
         merchantAccountNumber: this._merchantAccountNumber,
+        customerMobileNumber: params?.customerMobileNumber,
       };
 
       this.Options.url = `${this._requestPaymentUrl}`;
