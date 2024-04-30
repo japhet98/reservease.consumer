@@ -24,7 +24,7 @@ export class FilUploadService {
   public privateKey: string;
   public gcStorage: Storage;
   public storageFolder: string;
-  public hostingProvider = 'gcp-storage';
+  public hostingProvider = 'gcp-storage-v3';
   public fileLimit?: number = 10;
   public isRequired: boolean = false;
   public _storage = Storage;
